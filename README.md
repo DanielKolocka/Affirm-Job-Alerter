@@ -1,20 +1,25 @@
 # Affirm job alert bot
 
-Checks Affirm's job board every 3 hours on GitHub Actions. When a **new** non senior engineering or early career role shows up in Canada or the US, it opens an issue in this repo, and GitHub emails you about it. If nothing new appears, it stays quiet.
+Checks Affirm's job board every 3 hours on GitHub Actions. When a **new** non senior engineering or early career role shows up in Canada, it opens an issue in this repo, and GitHub emails you about it. If nothing new appears, you get one short daily check-in instead, so you know it's still running.
 
 No apps, no extra accounts, no passwords. It only uses your GitHub account.
 
 The very first run opens one issue listing every matching job open right now. After that you only hear about new ones.
 
+## Daily check-in
+
+Once a day, around 7 AM Vancouver time (8 AM in summer), the bot comments on a single **Bot status: daily check-in** issue saying it is still running and how many times it checked. GitHub emails you each comment. On days when you already got a new job alert, it skips the check-in, since the alert proves it's running.
+
+Change `HEARTBEAT_HOUR_UTC` at the top of `check_jobs.py` to move it. If you ever stop getting the check-in, look at the **Actions** tab for a failed run.
+
 ## What counts as a match
 
 | Rule | Example kept | Example dropped |
 |---|---|---|
-| Title has engineer, developer, early career, new grad, intern or co-op | Software Engineer I, Frontend | Quantitative Analyst II |
+| Title has engineer, developer, early career or new grad | Software Engineer I, Frontend | Quantitative Analyst II |
+| Not an internship or co-op | Software Engineer, Early Career | Software Engineer Intern |
 | Title is not senior | Machine Learning Engineer II | Senior / Staff / Principal / Lead / Manager / III |
-| Location is Canada or US | Remote Canada, San Francisco | Remote Poland, Remote UK |
-
-US roles are kept, but the alert adds a note when the posting says something like "we do not sponsor visas" or "must be authorized to work in the US", so you can tell at a glance if a Canadian can apply.
+| Location is in Canada | Remote Canada, Toronto | Remote US, San Francisco, Remote UK |
 
 Tweak the word lists at the top of `check_jobs.py` if you want to widen or narrow it.
 
